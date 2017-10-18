@@ -1,5 +1,5 @@
 import numpy as np
-import cPickle as pickle
+import _pickle as pickle
 import os
 
 def collage(data):
@@ -32,20 +32,20 @@ def readCIFAR(path):
     trnData = []
     trnLabels = []
     for i in range(1,6):
-        with open(os.path.join(path,'data_batch_{}'.format(i))) as f:
-            data = pickle.load(f)
-            trnData.append(data['data'])
-            trnLabels.append(data['labels'])
+        with open(os.path.join(path,'data_batch_{}'.format(i)), 'rb') as f:
+            data = pickle.load(f, encoding='bytes')
+            trnData.append(data[b'data'])
+            trnLabels.append(data[b'labels'])
      
     trnData = np.concatenate(trnData).reshape(-1, 3, 32, 32)
     trnData = np.concatenate([trnData[:,:,:,::-1], trnData[:,:,:,:]])
     trnLabels = np.concatenate(trnLabels)
     trnLabels = np.concatenate([trnLabels, trnLabels])
     
-    with open(os.path.join(path,'test_batch'.format(i))) as f:
-        data = pickle.load(f)
-        tstData = data['data']
-        tstLabels = data['labels']
+    with open(os.path.join(path,'test_batch'.format(i)), 'rb') as f:
+        data = pickle.load(f, encoding='bytes')
+        tstData = data[b'data']
+        tstLabels = data[b'labels']
 
     tstData = tstData.reshape(-1, 3, 32, 32)
     tstData = np.concatenate([tstData[:,:,:,::-1], tstData[:,:,:,:]])
